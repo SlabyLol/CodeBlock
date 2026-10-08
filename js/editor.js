@@ -1,5 +1,5 @@
 /**
- * CodeBlock – Blockly Editor Setup
+ * CodeBlock – Blockly Editor Setup (v2)
  */
 
 const Editor = {
@@ -10,9 +10,7 @@ const Editor = {
       kind: 'categoryToolbox',
       contents: [
         {
-          kind: 'category',
-          name: 'Motion',
-          colour: '230',
+          kind: 'category', name: 'Motion', colour: '230',
           contents: [
             { kind: 'block', type: 'motion_move_steps' },
             { kind: 'block', type: 'motion_turn_right' },
@@ -29,9 +27,7 @@ const Editor = {
           ]
         },
         {
-          kind: 'category',
-          name: 'Looks',
-          colour: '160',
+          kind: 'category', name: 'Looks', colour: '160',
           contents: [
             { kind: 'block', type: 'looks_say' },
             { kind: 'block', type: 'looks_say_for' },
@@ -40,13 +36,13 @@ const Editor = {
             { kind: 'block', type: 'looks_set_size' },
             { kind: 'block', type: 'looks_change_size' },
             { kind: 'block', type: 'looks_size' },
-            { kind: 'block', type: 'looks_set_color' }
+            { kind: 'block', type: 'looks_set_color' },
+            { kind: 'block', type: 'looks_next_costume' },
+            { kind: 'block', type: 'looks_switch_costume' }
           ]
         },
         {
-          kind: 'category',
-          name: 'Events',
-          colour: '45',
+          kind: 'category', name: 'Events', colour: '45',
           contents: [
             { kind: 'block', type: 'events_when_flag' },
             { kind: 'block', type: 'events_when_key' },
@@ -56,9 +52,7 @@ const Editor = {
           ]
         },
         {
-          kind: 'category',
-          name: 'Control',
-          colour: '120',
+          kind: 'category', name: 'Control', colour: '120',
           contents: [
             { kind: 'block', type: 'control_wait' },
             { kind: 'block', type: 'control_repeat' },
@@ -71,9 +65,7 @@ const Editor = {
           ]
         },
         {
-          kind: 'category',
-          name: 'Sensing',
-          colour: '190',
+          kind: 'category', name: 'Sensing', colour: '190',
           contents: [
             { kind: 'block', type: 'sensing_key_pressed' },
             { kind: 'block', type: 'sensing_mouse_x' },
@@ -85,9 +77,7 @@ const Editor = {
           ]
         },
         {
-          kind: 'category',
-          name: 'Operators',
-          colour: '230',
+          kind: 'category', name: 'Operators', colour: '230',
           contents: [
             { kind: 'block', type: 'math_number' },
             { kind: 'block', type: 'text' },
@@ -101,10 +91,7 @@ const Editor = {
           ]
         },
         {
-          kind: 'category',
-          name: 'Variables',
-          colour: '330',
-          custom: 'VARIABLE'
+          kind: 'category', name: 'Variables', colour: '330', custom: 'VARIABLE'
         }
       ]
     };
@@ -112,88 +99,62 @@ const Editor = {
     this.workspace = Blockly.inject('blockly-div', {
       toolbox: toolbox,
       media: 'https://unpkg.com/blockly/media/',
-      grid: {
-        spacing: 25,
-        length: 3,
-        colour: '#2a3140',
-        snap: true
-      },
-      zoom: {
-        controls: true,
-        wheel: true,
-        startScale: 0.9,
-        maxScale: 3,
-        minScale: 0.3,
-        scaleSpeed: 1.2
-      },
+      grid: { spacing: 25, length: 3, colour: '#2a3140', snap: true },
+      zoom: { controls: true, wheel: true, startScale: 0.85, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 },
       trashcan: true,
-      move: {
-        scrollbars: true,
-        drag: true,
-        wheel: true
-      },
+      move: { scrollbars: true, drag: true, wheel: true },
       renderer: 'geras',
       theme: Blockly.Themes.Classic
     });
 
-    // Add a starter example
     this.loadStarter();
 
-    // Resize observer
     const observer = new ResizeObserver(() => {
-      Blockly.svgResize(this.workspace);
+      if (this.workspace) Blockly.svgResize(this.workspace);
     });
-    observer.observe(document.getElementById('editor-area'));
+    const el = document.getElementById('mode-blocks') || document.getElementById('editor-main');
+    if (el) observer.observe(el);
 
-    Utils.log('Editor ready', 'info');
     return this.workspace;
   },
 
   loadStarter() {
-    // Simple "when flag → forever → move 5 steps → turn 15" example
-    const xml = `
-      <xml xmlns="https://developers.google.com/blockly/xml">
-        <block type="events_when_flag" x="50" y="50">
-          <next>
-            <block type="control_forever">
-              <statement name="DO">
-                <block type="motion_move_steps">
-                  <value name="STEPS">
-                    <block type="math_number">
-                      <field name="NUM">5</field>
-                    </block>
-                  </value>
-                  <next>
-                    <block type="motion_turn_right">
-                      <value name="DEGREES">
-                        <block type="math_number">
-                          <field name="NUM">15</field>
-                        </block>
-                      </value>
-                    </block>
-                  </next>
-                </block>
-              </statement>
-            </block>
-          </next>
-        </block>
-      </xml>`;
-
+    const xml = `<xml xmlns="https://developers.google.com/blockly/xml">
+      <block type="events_when_flag" x="40" y="40">
+        <next>
+          <block type="control_forever">
+            <statement name="DO">
+              <block type="motion_move_steps">
+                <value name="STEPS"><block type="math_number"><field name="NUM">4</field></block></value>
+                <next>
+                  <block type="motion_turn_right">
+                    <value name="DEGREES"><block type="math_number"><field name="NUM">12</field></block></value>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </xml>`;
     try {
       const dom = Blockly.utils.xml.textToDom(xml);
       Blockly.Xml.domToWorkspace(dom, this.workspace);
     } catch (e) {
-      // Fallback: create blocks programmatically if XML fails
-      console.warn('Could not load starter via XML', e);
+      console.warn('Starter load failed', e);
     }
   },
 
   clear() {
-    this.workspace.clear();
+    if (this.workspace) this.workspace.clear();
   },
 
   getWorkspace() {
     return this.workspace;
+  },
+
+  resize() {
+    if (this.workspace) Blockly.svgResize(this.workspace);
   }
 };
 
