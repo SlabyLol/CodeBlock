@@ -1,6 +1,6 @@
 /* Stage & Play Area */
 
-#stage-area.fullscreen {
+#stage-panel.fullscreen {
   position: fixed;
   inset: 0;
   width: 100% !important;
@@ -9,15 +9,20 @@
   background: #000;
 }
 
-#stage-area.fullscreen #stage {
-  width: 100%;
-  height: calc(100% - 60px);
+#stage-panel.fullscreen #stage-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#stage-panel.fullscreen #stage {
+  width: min(100%, 960px);
+  height: auto;
   max-width: none;
-  margin: 0;
   border-radius: 0;
 }
 
-#stage-area.fullscreen #stage-header,
-#stage-area.fullscreen #stage-info {
-  background: #111;
+#stage-panel.fullscreen #sprite-properties {
+  display: none;
 }
