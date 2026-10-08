@@ -1,0 +1,124 @@
+/* Sprite Drawing & Costumes */
+
+.draw-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.tool-group {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.tool {
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.tool:hover { background: #252d3c; }
+.tool.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.tool-group label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#brush-size { width: 80px; }
+#draw-color {
+  width: 32px; height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
+
+.draw-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  background: #0a0c10;
+  padding: 16px;
+}
+#draw-canvas {
+  background: #111;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  cursor: crosshair;
+  image-rendering: pixelated;
+  box-shadow: var(--shadow);
+}
+.draw-preview {
+  text-align: center;
+}
+.draw-preview p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+#preview-canvas {
+  background: #111;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  image-rendering: pixelated;
+}
+
+/* Costumes */
+.costumes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+#costume-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px;
+  overflow-y: auto;
+  flex: 1;
+  align-content: flex-start;
+}
+.costume-card {
+  width: 100px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+.costume-card:hover { border-color: #3a4558; }
+.costume-card.active { border-color: var(--primary); }
+.costume-card canvas {
+  width: 64px; height: 64px;
+  background: #0a0c10;
+  border-radius: 4px;
+  image-rendering: pixelated;
+  margin-bottom: 4px;
+}
+.costume-card .cname {
+  font-size: 0.72rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
