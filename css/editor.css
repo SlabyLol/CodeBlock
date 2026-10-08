@@ -1,0 +1,52 @@
+/* Blockly Editor Custom Theme */
+
+.blocklyMainBackground {
+  fill: #1a1e28 !important;
+}
+
+.blocklyToolboxDiv {
+  background: #161a22 !important;
+  border-right: 1px solid #2a3140 !important;
+  color: #e6e9ef !important;
+  width: 220px !important;
+}
+
+.blocklyTreeRow {
+  height: 32px !important;
+  line-height: 32px !important;
+  padding-left: 8px !important;
+  margin: 2px 4px !important;
+  border-radius: 6px !important;
+}
+
+.blocklyTreeRow:hover {
+  background: #1e2430 !important;
+}
+
+.blocklyTreeSelected {
+  background: #2a3a55 !important;
+}
+
+.blocklyTreeLabel {
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  color: #e6e9ef !important;
+}
+
+.blocklyFlyoutBackground {
+  fill: #12151c !important;
+}
+
+.blocklyScrollbarHandle {
+  fill: #2a3140 !important;
+}
+
+.blocklySelected > .blocklyPath {
+  stroke: #4f8cff !important;
+  stroke-width: 2px !important;
+}
+
+/* Category colors */
+.blocklyTreeIcon {
+  display: none !important;
+}
