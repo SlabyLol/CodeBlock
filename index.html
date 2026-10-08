@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeBlock – Block-based GameMaker</title>
+  <title>CodeBlock – Real GameMaker</title>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/editor.css">
   <link rel="stylesheet" href="css/play.css">
-  <!-- Blockly -->
+  <link rel="stylesheet" href="css/sprite-editor.css">
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
   <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
@@ -15,54 +15,141 @@
 </head>
 <body>
   <div id="app">
-    <!-- Top Toolbar -->
     <header id="toolbar">
       <div class="logo">
         <span class="logo-icon">▦</span>
         <span class="logo-text">CodeBlock</span>
+        <span class="version">v2</span>
       </div>
       <div class="toolbar-actions">
         <button id="btn-new" class="btn" title="New Project">New</button>
         <button id="btn-load" class="btn" title="Load Project">Load</button>
         <button id="btn-save" class="btn" title="Save Project">Save</button>
-        <button id="btn-play" class="btn btn-primary" title="Play">▶ Play</button>
+        <span class="sep"></span>
+        <button id="btn-play" class="btn btn-primary" title="Play (Ctrl+Enter)">▶ Play</button>
         <button id="btn-stop" class="btn" title="Stop" disabled>■ Stop</button>
+        <span class="sep"></span>
         <button id="btn-compile" class="btn" title="Compile">Compile</button>
-        <button id="btn-download" class="btn" title="Download Game">Download</button>
+        <button id="btn-download" class="btn" title="Download">Download</button>
       </div>
       <div class="project-name">
         <input type="text" id="project-name" value="Untitled Project" placeholder="Project name">
       </div>
     </header>
 
-    <!-- Main Layout -->
-    <div id="main">
-      <!-- Left: Toolbox + Editor -->
-      <aside id="sidebar">
-        <div id="blockly-toolbox"></div>
+    <div id="workspace">
+      <aside id="sprite-panel">
+        <div class="panel-header">
+          <span>Sprites</span>
+          <button id="btn-add-sprite" class="btn-icon" title="Add Sprite">+</button>
+        </div>
+        <div id="sprite-list"></div>
+        <div class="panel-footer">
+          <button id="btn-delete-sprite" class="btn btn-danger btn-sm">Delete</button>
+        </div>
       </aside>
 
-      <section id="editor-area">
-        <div id="blockly-div"></div>
-      </section>
+      <main id="editor-main">
+        <div id="mode-tabs">
+          <button class="tab active" data-mode="blocks">Blocks</button>
+          <button class="tab" data-mode="cbs">CBS Script</button>
+          <button class="tab" data-mode="draw">Draw Sprite</button>
+          <button class="tab" data-mode="costumes">Costumes</button>
+        </div>
 
-      <!-- Right: Stage / Play Area -->
-      <section id="stage-area">
-        <div id="stage-header">
-          <span>Stage</span>
-          <div class="stage-controls">
-            <button id="btn-fullscreen" class="btn-icon" title="Fullscreen">⛶</button>
+        <div id="mode-blocks" class="mode-panel active">
+          <div id="blockly-div"></div>
+        </div>
+
+        <div id="mode-cbs" class="mode-panel">
+          <div class="cbs-toolbar">
+            <span class="cbs-hint">CodeBlock Script (CBS) – real text scripting</span>
+            <button id="btn-cbs-run" class="btn btn-sm">Run CBS</button>
+            <button id="btn-cbs-format" class="btn btn-sm">Format</button>
+          </div>
+          <textarea id="cbs-editor" spellcheck="false" placeholder="// CodeBlock Script (CBS)\n// Example:\n\nwhen flag clicked\n  forever\n    move 5 steps\n    turn right 15 degrees\n    if key space pressed then\n      say Jump! for 1 seconds\n    end\n  end\n"></textarea>
+          <div id="cbs-output"></div>
+        </div>
+
+        <div id="mode-draw" class="mode-panel">
+          <div class="draw-toolbar">
+            <div class="tool-group">
+              <button class="tool active" data-tool="pencil">Pencil</button>
+              <button class="tool" data-tool="eraser">Eraser</button>
+              <button class="tool" data-tool="fill">Fill</button>
+              <button class="tool" data-tool="line">Line</button>
+              <button class="tool" data-tool="rect">Rect</button>
+              <button class="tool" data-tool="circle">Circle</button>
+              <button class="tool" data-tool="picker">Picker</button>
+            </div>
+            <div class="tool-group">
+              <label>Size <input type="range" id="brush-size" min="1" max="32" value="3"></label>
+              <input type="color" id="draw-color" value="#4f8cff">
+              <button id="btn-clear-canvas" class="btn btn-sm">Clear</button>
+              <button id="btn-apply-costume" class="btn btn-primary btn-sm">Apply to Sprite</button>
+            </div>
+          </div>
+          <div class="draw-area">
+            <canvas id="draw-canvas" width="256" height="256"></canvas>
+            <div class="draw-preview">
+              <p>Preview</p>
+              <canvas id="preview-canvas" width="96" height="96"></canvas>
+            </div>
           </div>
         </div>
-        <canvas id="stage" width="480" height="360"></canvas>
+
+        <div id="mode-costumes" class="mode-panel">
+          <div class="costumes-header">
+            <span>Costumes of selected sprite</span>
+            <button id="btn-add-costume" class="btn btn-sm">+ New Costume</button>
+          </div>
+          <div id="costume-list"></div>
+        </div>
+      </main>
+
+      <aside id="stage-panel">
+        <div id="stage-header">
+          <span>Stage <small>480×360</small></span>
+          <div class="stage-controls">
+            <button id="btn-fullscreen" class="btn-icon">Fullscreen</button>
+          </div>
+        </div>
+        <div id="stage-wrapper">
+          <canvas id="stage" width="480" height="360"></canvas>
+        </div>
         <div id="stage-info">
           <span id="fps">FPS: --</span>
           <span id="sprite-count">Sprites: 0</span>
+          <span id="running-state">Stopped</span>
         </div>
-      </section>
+        <div id="sprite-properties">
+          <h4>Selected Sprite</h4>
+          <div class="prop-row">
+            <label>Name</label>
+            <input type="text" id="prop-name" value="Sprite1">
+          </div>
+          <div class="prop-row">
+            <label>X</label>
+            <input type="number" id="prop-x" value="0">
+            <label>Y</label>
+            <input type="number" id="prop-y" value="0">
+          </div>
+          <div class="prop-row">
+            <label>Direction</label>
+            <input type="number" id="prop-dir" value="90">
+          </div>
+          <div class="prop-row">
+            <label>Size %</label>
+            <input type="number" id="prop-size" value="100">
+          </div>
+          <div class="prop-row">
+            <label>Visible</label>
+            <input type="checkbox" id="prop-visible" checked>
+          </div>
+        </div>
+      </aside>
     </div>
 
-    <!-- Bottom: Console / Output -->
     <footer id="console-area">
       <div class="console-header">
         <span>Console</span>
@@ -72,11 +159,15 @@
     </footer>
   </div>
 
-  <!-- Hidden file input for loading -->
   <input type="file" id="file-input" accept=".json,.codeblock" style="display:none">
 
-  <!-- Scripts -->
   <script src="js/utils.js"></script>
+  <script src="js/sprite.js"></script>
+  <script src="js/project.js"></script>
+  <script src="js/runtime.js"></script>
+  <script src="js/cbs.js"></script>
+  <script src="js/sprite-editor.js"></script>
+
   <script src="js/blocks/motion.js"></script>
   <script src="js/blocks/looks.js"></script>
   <script src="js/blocks/events.js"></script>
@@ -84,7 +175,8 @@
   <script src="js/blocks/sensing.js"></script>
   <script src="js/blocks/operators.js"></script>
   <script src="js/blocks/variables.js"></script>
-  <script src="js/runtime.js"></script>
+  <script src="js/blocks/sprites.js"></script>
+
   <script src="js/compile.js"></script>
   <script src="js/download.js"></script>
   <script src="js/editor.js"></script>
